@@ -67,46 +67,39 @@ const images = [
 
 const gallery = document.querySelector(".gallery");
 
-images.forEach(({ preview, original, description }) =>
-  gallery.insertAdjacentHTML(
-    "beforeend",
-    `<li class="gallery-item">
-  <a class="gallery-link" href="${original}">
-    <img
-      class="gallery-image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
-</li>
+gallery.innerHTML = images
+  .map(
+    ({ preview, original, description }) => `
+  <li class="gallery-item">
+    <a class="gallery-link" href="${original}">
+      <img
+        class="gallery-image"
+        src="${preview}"
+        data-source="${original}"
+        alt="${description}"
+      />
+    </a>
+  </li>
 `
   )
-);
+  .join("");
 
-const galleryLinks = document.querySelectorAll(".gallery-link");
-
-galleryLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-  });
-});
-
+//
 gallery.addEventListener("click", (event) => {
   event.preventDefault();
-  if (event.target.classList.contains("gallery-image")) {
+  if (!event.target.classList.contains("gallery-image")) return;
+  else {
     const largeImageUrl = event.target.dataset.source;
     console.log("Посилання на велике зображення:", largeImageUrl);
   }
+  const largeImageURL = event.target.dataset.source;
+  const modalImage = basicLightbox.create(`
+    <img src="${largeImageURL}" width="1112" height="640">
+  `);
+  modalImage.show();
 
   // Make modal
   if (event.target.nodeName !== "IMG") return;
-  //large img url
-  const largeImageURL = event.target.dataset.source;
-
-  const modalImage = basicLightbox.create(`
-        <img src="${largeImageURL}" width="1112" height="640">
-    `);
 
   // open modal
   modalImage.show();

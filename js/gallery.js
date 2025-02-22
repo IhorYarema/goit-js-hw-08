@@ -70,41 +70,35 @@ const gallery = document.querySelector(".gallery");
 gallery.innerHTML = images
   .map(
     ({ preview, original, description }) => `
-  <li class="gallery-item">
-    <a class="gallery-link" href="${original}">
-      <img
-        class="gallery-image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-      />
-    </a>
-  </li>
-`
+      <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+          <img
+            class="gallery-image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>
+    `
   )
   .join("");
 
-//
 gallery.addEventListener("click", (event) => {
   event.preventDefault();
-  if (!event.target.classList.contains("gallery-image")) return;
-  else {
-    const largeImageUrl = event.target.dataset.source;
-    console.log("Посилання на велике зображення:", largeImageUrl);
-  }
-  const largeImageURL = event.target.dataset.source;
+
+  const targetImage = event.target;
+  if (targetImage.nodeName !== "IMG") return;
+
+  const largeImageURL = targetImage.dataset.source;
+  console.log("Посилання на велике зображення:", largeImageURL);
+
   const modalImage = basicLightbox.create(`
     <img src="${largeImageURL}" width="1112" height="640">
   `);
+
   modalImage.show();
 
-  // Make modal
-  if (event.target.nodeName !== "IMG") return;
-
-  // open modal
-  modalImage.show();
-
-  // close modal
   const closeOnEscape = (event) => {
     if (event.key === "Escape") {
       modalImage.close();
